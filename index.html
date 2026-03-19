@@ -429,6 +429,29 @@
     transition: all 0.15s;
   }
   .btn-refresh:hover { border-color: var(--teal); color: var(--teal); }
+  .result-reveal-area { display: flex; align-items: center; gap: 10px; }
+  .btn-reveal {
+    background: var(--teal);
+    color: var(--white);
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    white-space: nowrap;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .btn-reveal:hover { background: var(--teal-dark); }
+  .btn-reveal.revealed {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.3);
+    cursor: default;
+    font-size: 10px;
+  }
 
   /* LOADING */
   .loading-msg {
@@ -1062,6 +1085,17 @@
     loadResults();
   };
 
+  window.revealResult = function(matchup) {
+    const resultEl = document.getElementById('result-' + matchup);
+    const btnEl = document.getElementById('btn-' + matchup);
+    if(resultEl && btnEl) {
+      resultEl.style.display = 'block';
+      btnEl.textContent = '✓ Revealed';
+      btnEl.classList.add('revealed');
+      btnEl.disabled = true;
+    }
+  };
+
   window.loadResults = async function() {
     if(!adminUnlocked) return;
     const container = document.getElementById('results-container');
@@ -1094,24 +1128,30 @@
           const bNameStyle = !aWins ? 'font-weight:600;color:#fff' : 'color:rgba(255,255,255,0.35)';
           const aIcon = aWins && total > 0 ? ' 🔥' : '';
           const bIcon = !aWins && total > 0 ? ' 🔥' : '';
-          html += `<div class="result-row">
+          html += `<div class="result-row" id="row-${m}">
             <div class="result-bits">
-              <div style="${aNameStyle}">${matchupLabels[m].a}${aIcon}</div>
-              <div style="${bNameStyle}">${matchupLabels[m].b}${bIcon}</div>
+              <div style="margin-bottom:2px;color:rgba(255,255,255,0.8)">${matchupLabels[m].a}</div>
+              <div style="color:rgba(255,255,255,0.4)">${matchupLabels[m].b}</div>
             </div>
-            <div class="result-bar-area">
-              <div class="result-bar-row">
-                <span class="result-bar-label">A</span>
-                <div class="result-bar" style="width:${Math.round(aPct/100*maxBar)}px;background:${aBarColor}"></div>
-                <span class="result-count">${aVotes}</span>
-                <span class="result-count" style="color:${aPctColor}">${aPct}%</span>
+            <div class="result-reveal-area">
+              <div class="result-hidden" id="result-${m}" style="display:none">
+                <div class="result-bar-area">
+                  <div class="result-bar-row">
+                    <span class="result-bar-label">A</span>
+                    <div class="result-bar" style="width:${Math.round(aPct/100*maxBar)}px;background:${aBarColor}"></div>
+                    <span class="result-count">${aVotes}</span>
+                    <span class="result-count" style="color:${aPctColor}">${aPct}%</span>
+                  </div>
+                  <div class="result-bar-row">
+                    <span class="result-bar-label">B</span>
+                    <div class="result-bar" style="width:${Math.round(bPct/100*maxBar)}px;background:${bBarColor}"></div>
+                    <span class="result-count">${bVotes}</span>
+                    <span class="result-count" style="color:${bPctColor}">${bPct}%</span>
+                  </div>
+                </div>
+                <div style="margin-top:6px;font-size:11px;color:rgba(255,255,255,0.5);font-family:'DM Mono',monospace">${total} vote${total!==1?'s':''} cast</div>
               </div>
-              <div class="result-bar-row">
-                <span class="result-bar-label">B</span>
-                <div class="result-bar" style="width:${Math.round(bPct/100*maxBar)}px;background:${bBarColor}"></div>
-                <span class="result-count">${bVotes}</span>
-                <span class="result-count" style="color:${bPctColor}">${bPct}%</span>
-              </div>
+              <button class="btn-reveal" id="btn-${m}" onclick="revealResult('${m}')">🎬 Reveal</button>
             </div>
           </div>`;
         });
