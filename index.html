@@ -1085,23 +1085,32 @@
           const aPct = Math.round((aVotes/total)*100);
           const bPct = 100 - aPct;
           const maxBar = 120;
+          const aWins = aVotes >= bVotes;
+          const aBarColor = aWins ? '#5dada8' : '#c94040';
+          const bBarColor = !aWins ? '#5dada8' : '#c94040';
+          const aPctColor = aWins ? 'var(--teal)' : '#c94040';
+          const bPctColor = !aWins ? 'var(--teal)' : '#c94040';
+          const aNameStyle = aWins ? 'font-weight:600;color:#fff;margin-bottom:2px' : 'color:rgba(255,255,255,0.35);margin-bottom:2px';
+          const bNameStyle = !aWins ? 'font-weight:600;color:#fff' : 'color:rgba(255,255,255,0.35)';
+          const aIcon = aWins && total > 0 ? ' ✓' : '';
+          const bIcon = !aWins && total > 0 ? ' ✓' : '';
           html += `<div class="result-row">
             <div class="result-bits">
-              <div style="margin-bottom:2px">${matchupLabels[m].a}</div>
-              <div style="color:rgba(255,255,255,0.4)">${matchupLabels[m].b}</div>
+              <div style="${aNameStyle}">${matchupLabels[m].a}${aIcon}</div>
+              <div style="${bNameStyle}">${matchupLabels[m].b}${bIcon}</div>
             </div>
             <div class="result-bar-area">
               <div class="result-bar-row">
                 <span class="result-bar-label">A</span>
-                <div class="result-bar a" style="width:${Math.round(aPct/100*maxBar)}px"></div>
+                <div class="result-bar" style="width:${Math.round(aPct/100*maxBar)}px;background:${aBarColor}"></div>
                 <span class="result-count">${aVotes}</span>
-                <span class="result-count" style="color:var(--teal)">${aPct}%</span>
+                <span class="result-count" style="color:${aPctColor}">${aPct}%</span>
               </div>
               <div class="result-bar-row">
                 <span class="result-bar-label">B</span>
-                <div class="result-bar b" style="width:${Math.round(bPct/100*maxBar)}px"></div>
+                <div class="result-bar" style="width:${Math.round(bPct/100*maxBar)}px;background:${bBarColor}"></div>
                 <span class="result-count">${bVotes}</span>
-                <span class="result-count" style="color:rgba(255,255,255,0.4)">${bPct}%</span>
+                <span class="result-count" style="color:${bPctColor}">${bPct}%</span>
               </div>
             </div>
           </div>`;
