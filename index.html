@@ -997,7 +997,8 @@
       const voteRef = doc(db, 'votes', hash);
       const tallyRef = doc(db, 'tallies', 'round1');
 
-      // Check again for duplicates (race condition protection)
+      // Check for existing vote
+      console.log('Checking for existing vote, hash:', hash);
       const existing = await getDoc(voteRef);
       if(existing.exists()) {
         document.getElementById('ballot').style.display = 'none';
@@ -1006,29 +1007,24 @@
         return;
       }
 
-      // Build tally increments
-      const tallyUpdates = {};
-      Object.entries(picks).forEach(([matchup, side]) => {
-        tallyUpdates[`${matchup}_${side}`] = increment(1);
-        tallyUpdates[`${matchup}_total`] = increment(1);
-      });
+      // Step 1: Write vote record
+      console.log('Writing vote record...');
+      await setDoc(voteRef, { ts: new Date().toISOString(), picks });
+      console.log('Vote written OK.');
 
-      // Save vote + update tallies atomically
-      await runTransaction(db, async (transaction) => {
-        const voteCheck = await transaction.get(voteRef);
-        if(voteCheck.exists()) throw new Error('already_voted');
-        transaction.set(voteRef, { ts: new Date().toISOString(), picks });
-        const tallySnap = await transaction.get(tallyRef);
-        if(!tallySnap.exists()) {
-          const init = { totalVoters: 1 };
-          Object.entries(picks).forEach(([m,s]) => { init[`${m}_${s}`]=1; init[`${m}_total`]=1; });
-          transaction.set(tallyRef, init);
-        } else {
-          const updates = { totalVoters: increment(1) };
-          Object.entries(picks).forEach(([m,s]) => { updates[`${m}_${s}`]=increment(1); updates[`${m}_total`]=increment(1); });
-          transaction.update(tallyRef, updates);
-        }
-      });
+      // Step 2: Update tallies
+      console.log('Updating tallies...');
+      const tallySnap = await getDoc(tallyRef);
+      if(!tallySnap.exists()) {
+        const init = { totalVoters: 1 };
+        Object.entries(picks).forEach(([m,s]) => { init[m+'_'+s]=1; init[m+'_total']=1; });
+        await setDoc(tallyRef, init);
+      } else {
+        const updates = { totalVoters: increment(1) };
+        Object.entries(picks).forEach(([m,s]) => { updates[m+'_'+s]=increment(1); updates[m+'_total']=increment(1); });
+        await updateDoc(tallyRef, updates);
+      }
+      console.log('Tallies updated OK.');
 
       // Show success
       document.getElementById('ballot').style.display = 'none';
@@ -1037,16 +1033,11 @@
       window.scrollTo({top:0,behavior:'smooth'});
 
     } catch(e) {
-      if(e.message === 'already_voted') {
-        document.getElementById('ballot').style.display = 'none';
-        document.getElementById('submit-section').style.display = 'none';
-        document.getElementById('voted-banner').style.display = 'block';
-      } else {
-        errEl.textContent = 'Submission failed. Please try again.';
-        errEl.style.display = 'block';
-        btn.disabled = false;
-        btn.textContent = 'Submit My Picks →';
-      }
+      console.error('Submit error code:', e.code, 'message:', e.message, e);
+      errEl.textContent = 'Error: ' + (e.code || e.message || 'unknown');
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Submit My Picks →';
     }
   };
 
