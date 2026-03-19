@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BitMadness 2026 — Listener Vote</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --teal: #5dada8;
+    --teal-dark: #3d8a85;
+    --teal-light: #e8f4f3;
+    --cream: #f8f5f0;
+    --dark: #1a2332;
+    --dark2: #243044;
+    --text: #1a2332;
+    --muted: #6b7a8d;
+    --border: #d4cec5;
+    --white: #ffffff;
+    --gold: #c8973a;
+    --red: #c94040;
+    --green: #3a9a5c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--dark);
+    padding: 20px 24px;
+    text-align: center;
+    position: relative;
+  }
+  .header-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--teal);
+    display: block;
+    margin: 0 auto 12px;
+  }
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    letter-spacing: 4px;
+    color: var(--white);
+    line-height: 1;
+  }
+  .header h1 span { color: var(--teal); }
+  .header-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 6px;
+    font-family: 'DM Mono', monospace;
+  }
+  .deadline-banner {
+    background: var(--teal);
+    color: var(--white);
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  /* MAIN */
+  .main { max-width: 900px; margin: 0 auto; padding: 28px 20px 60px; }
+
+  /* INTRO */
+  .intro-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 32px;
+    border-left: 4px solid var(--teal);
+  }
+  .intro-card h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    color: var(--dark);
+    margin-bottom: 10px;
+  }
+  .intro-card p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .vote-weight {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .weight-pill {
+    background: var(--teal-light);
+    border: 1px solid var(--teal);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--teal-dark);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* EMAIL GATE */
+  .email-gate {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 24px;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  .email-gate h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    color: var(--dark);
+  }
+  .email-gate p { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+  .email-input-row { display: flex; gap: 10px; max-width: 440px; margin: 0 auto; }
+  .email-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .email-input:focus { border-color: var(--teal); }
+  .btn-teal {
+    background: var(--teal);
+    color: var(--white);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .btn-teal:hover { background: var(--teal-dark); }
+  .btn-teal:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ALREADY VOTED */
+  .voted-banner {
+    background: #fff8e8;
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 28px;
+    display: none;
+    text-align: center;
+  }
+  .voted-banner p { font-size: 14px; color: var(--gold); font-weight: 600; }
+
+  /* REGIONS */
+  .region-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 32px 0 16px;
+  }
+  .region-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--dark);
+  }
+  .region-line { flex: 1; height: 1px; background: var(--border); }
+  .region-badge {
+    background: var(--dark);
+    color: var(--white);
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: 1px;
+  }
+
+  /* MATCHUP CARD */
+  .matchup-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    transition: box-shadow 0.15s;
+  }
+  .matchup-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .matchup-number {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  .matchup-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .option-btn {
+    background: var(--cream);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+  .option-btn.selected {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+  .option-btn:disabled { cursor: not-allowed; opacity: 0.6; }
+  .option-btn .seed {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    color: var(--teal);
+    min-width: 22px;
+    line-height: 1.2;
+  }
+  .option-btn .bit-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+  }
+  .vs-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    color: var(--muted);
+  }
+
+  /* SUBMIT SECTION */
+  .submit-section {
+    background: var(--dark);
+    border-radius: 12px;
+    padding: 28px 24px;
+    margin-top: 40px;
+    text-align: center;
+    display: none;
+  }
+  .submit-section h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .progress-text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 20px;
+  }
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.15);
+    border-radius: 4px;
+    height: 6px;
+    margin-bottom: 24px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--teal);
+    border-radius: 4px;
+    transition: width 0.3s;
+  }
+  .btn-submit {
+    background: var(--teal);
+    color: var(--white);
+    border: none;
+    padding: 14px 40px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.5px;
+    transition: all 0.15s;
+  }
+  .btn-submit:hover:not(:disabled) { background: var(--teal-dark); transform: translateY(-1px); }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* SUCCESS STATE */
+  .success-state {
+    background: var(--white);
+    border: 1px solid var(--green);
+    border-radius: 12px;
+    padding: 40px 24px;
+    text-align: center;
+    display: none;
+    margin-top: 32px;
+  }
+  .success-icon { font-size: 48px; margin-bottom: 16px; }
+  .success-state h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 2px;
+    color: var(--green);
+    margin-bottom: 8px;
+  }
+  .success-state p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+  /* ADMIN */
+  .admin-toggle {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .admin-link {
+    font-size: 11px;
+    color: var(--border);
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .admin-link:hover { color: var(--muted); }
+
+  .admin-panel {
+    display: none;
+    background: var(--dark);
+    border-radius: 12px;
+    padding: 28px 24px;
+    margin-top: 16px;
+  }
+  .admin-panel h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 2px;
+    color: var(--teal);
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .admin-login { display: flex; gap: 10px; max-width: 360px; margin: 0 auto 20px; }
+  .admin-input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    background: rgba(255,255,255,0.07);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+  }
+  .admin-input:focus { border-color: var(--teal); }
+
+  /* RESULTS TABLE */
+  .results-section { display: none; }
+  .results-region { margin-bottom: 28px; }
+  .results-region h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: var(--teal);
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 8px;
+  }
+  .result-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 12px;
+  }
+  .result-row:last-child { border-bottom: none; }
+  .result-bits { flex: 1; color: rgba(255,255,255,0.8); font-size: 11px; }
+  .result-bar-area { width: 160px; }
+  .result-bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+  .result-bar-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.5); width: 18px; text-align: right; }
+  .result-bar { height: 12px; border-radius: 3px; min-width: 2px; transition: width 0.5s; }
+  .result-bar.a { background: var(--teal); }
+  .result-bar.b { background: rgba(255,255,255,0.25); }
+  .result-count { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.5); min-width: 20px; }
+  .admin-total {
+    text-align: center;
+    color: rgba(255,255,255,0.5);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    margin-bottom: 20px;
+  }
+  .btn-refresh {
+    display: block;
+    margin: 16px auto 0;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.6);
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+  .btn-refresh:hover { border-color: var(--teal); color: var(--teal); }
+
+  /* LOADING */
+  .loading-msg {
+    text-align: center;
+    padding: 40px;
+    color: var(--muted);
+    font-size: 14px;
+    display: none;
+  }
+
+  .error-msg {
+    background: #fff0f0;
+    border: 1px solid #ffc0c0;
+    color: var(--red);
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin: 12px 0;
+    display: none;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <img class="header-logo" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gv4SUNDX1BST0ZJTEUAAQEAAAvoAAAAAAIAAABtbnRyUkdCIFhZWiAH2QADABsAFQAkAB9hY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA9tYAAQAAAADTLQAAAABkZXNjAAAA8AAAACBjcHJ0AAABEAAAADBjaGFkAAABQAAAACx3dHB0AAABbAAAABRiWFlaAAABgAAAABRnWFlaAAABlAAAABRyWFlaAAABqAAAABRyVFJDAAABvAAAACBnVFJDAAABvAAAACBiVFJDAAABvAAAACBjaHJtAAAB3AAAACRkbW5kAAACAAAAADJkbWRkAAACMAAAAEB2dWVkAAACcAAAAEB2aWV3AAACsAAAACRsdW1pAAACAAAAApbWVhcwAAAlAAAAA=" alt="Circling Back" onerror="this.style.display='none'">
+  <h1>BIT<span>MADNESS</span></h1>
+  <div class="header-sub">Circling Back Podcast · 2026 Listener Vote</div>
+</div>
+
+<div class="deadline-banner">
+  ⏰ Voting closes Sunday at midnight CT — results revealed on Monday's episode
+</div>
+
+<div class="main">
+
+  <!-- INTRO -->
+  <div class="intro-card">
+    <h2>Your Vote Matters</h2>
+    <p>Vote on all 32 first-round matchups below. The listener vote is weighted <strong>2x</strong> — so your collective voice carries real weight in deciding which bits move on to Round 2. Dillon, Dave & Randy each get 1 vote. You get 2.</p>
+    <div class="vote-weight">
+      <span class="weight-pill">👥 Listener Vote = 2 pts</span>
+      <span class="weight-pill">🎙 Dillon = 1 pt</span>
+      <span class="weight-pill">🎙 Dave = 1 pt</span>
+      <span class="weight-pill">🎙 Randy = 1 pt</span>
+    </div>
+  </div>
+
+  <!-- EMAIL GATE -->
+  <div class="email-gate" id="email-gate">
+    <h3>Enter Your Email to Vote</h3>
+    <p>One vote per email address. Your vote is anonymous — we just use your email to prevent duplicates.</p>
+    <div class="email-input-row">
+      <input type="email" class="email-input" id="voter-email" placeholder="your@email.com" onkeydown="if(event.key==='Enter')checkEmail()">
+      <button class="btn-teal" onclick="checkEmail()" id="email-btn">Let's Vote →</button>
+    </div>
+    <div class="error-msg" id="email-error"></div>
+  </div>
+
+  <!-- ALREADY VOTED -->
+  <div class="voted-banner" id="voted-banner">
+    <p>✅ You've already submitted your vote — thanks for participating! Tune in Monday to hear the results.</p>
+  </div>
+
+  <!-- BALLOT (hidden until email confirmed) -->
+  <div id="ballot" style="display:none">
+
+    <!-- WILLMON'S REGION -->
+    <div class="region-header">
+      <div class="region-name">Willmon's Region</div>
+      <div class="region-line"></div>
+      <div class="region-badge">R1</div>
+    </div>
+
+    <!-- Matchup 1 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 1</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m1','a',this)"><span class="seed">1</span><span class="bit-name">Alien Allergy Voice</span></button>
+        <button class="option-btn" onclick="pick('m1','b',this)"><span class="seed">16</span><span class="bit-name">Dan Bringing Protein Powder</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 2 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 2</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m2','a',this)"><span class="seed">9</span><span class="bit-name">Lakeside Cunnilingus</span></button>
+        <button class="option-btn" onclick="pick('m2','b',this)"><span class="seed">8</span><span class="bit-name">Being mad at horny Instagram posts</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 3 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 3</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m3','a',this)"><span class="seed">5</span><span class="bit-name">General Contractor Dave</span></button>
+        <button class="option-btn" onclick="pick('m3','b',this)"><span class="seed">12</span><span class="bit-name">Dillon Being the Only Cowboy</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 4 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 4</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m4','a',this)"><span class="seed">13</span><span class="bit-name">Randy Researching Free Sponsor Merch</span></button>
+        <button class="option-btn" onclick="pick('m4','b',this)"><span class="seed">4</span><span class="bit-name">The Twisted Cork</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 5 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 5</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m5','a',this)"><span class="seed">3</span><span class="bit-name">Slonks</span></button>
+        <button class="option-btn" onclick="pick('m5','b',this)"><span class="seed">14</span><span class="bit-name">Dave Pizza-ing Down the Mountain</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 6 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 6</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m6','a',this)"><span class="seed">11</span><span class="bit-name">Dave's Addiction to Smelling Salts</span></button>
+        <button class="option-btn" onclick="pick('m6','b',this)"><span class="seed">6</span><span class="bit-name">Obama and JFK voice</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 7 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 7</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m7','a',this)"><span class="seed">7</span><span class="bit-name">Dillon causing car accidents</span></button>
+        <button class="option-btn" onclick="pick('m7','b',this)"><span class="seed">10</span><span class="bit-name">Mondo</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 8 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 8</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m8','a',this)"><span class="seed">15</span><span class="bit-name">Randy's Side Quests</span></button>
+        <button class="option-btn" onclick="pick('m8','b',this)"><span class="seed">2</span><span class="bit-name">Out ___ Way</span></button>
+      </div>
+    </div>
+
+    <!-- THE DICK SALOON REGION -->
+    <div class="region-header">
+      <div class="region-name">The Dick Saloon</div>
+      <div class="region-line"></div>
+      <div class="region-badge">R1</div>
+    </div>
+
+    <!-- Matchup 9 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 9</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m9','a',this)"><span class="seed">2</span><span class="bit-name">Hungwy</span></button>
+        <button class="option-btn" onclick="pick('m9','b',this)"><span class="seed">15</span><span class="bit-name">Always Welcoming the Stoolies</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 10 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 10</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m10','a',this)"><span class="seed">10</span><span class="bit-name">Seaman's Cola</span></button>
+        <button class="option-btn" onclick="pick('m10','b',this)"><span class="seed">7</span><span class="bit-name">Dave Being Friends with Sweens</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 11 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 11</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m11','a',this)"><span class="seed">6</span><span class="bit-name">What's the Damage?</span></button>
+        <button class="option-btn" onclick="pick('m11','b',this)"><span class="seed">11</span><span class="bit-name">Ren Fair Randy</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 12 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 12</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m12','a',this)"><span class="seed">14</span><span class="bit-name">Gladys Getting Filled Up</span></button>
+        <button class="option-btn" onclick="pick('m12','b',this)"><span class="seed">3</span><span class="bit-name">The Hottest Man on the Planet</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 13 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 13</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m13','a',this)"><span class="seed">4</span><span class="bit-name">Dave Taking Chels Out</span></button>
+        <button class="option-btn" onclick="pick('m13','b',this)"><span class="seed">13</span><span class="bit-name">Less Randy</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 14 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 14</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m14','a',this)"><span class="seed">12</span><span class="bit-name">Liv Langdon's Hot Boyfriend</span></button>
+        <button class="option-btn" onclick="pick('m14','b',this)"><span class="seed">5</span><span class="bit-name">Yeah, I'd Like That One Back</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 15 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 15</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m15','a',this)"><span class="seed">8</span><span class="bit-name">It's a Visual Show</span></button>
+        <button class="option-btn" onclick="pick('m15','b',this)"><span class="seed">9</span><span class="bit-name">Hi Dave</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 16 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 16</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m16','a',this)"><span class="seed">16</span><span class="bit-name">Mexico Randy</span></button>
+        <button class="option-btn" onclick="pick('m16','b',this)"><span class="seed">1</span><span class="bit-name">Mattel Ranchos</span></button>
+      </div>
+    </div>
+
+    <!-- KELLY'S IRISH PUB REGION -->
+    <div class="region-header">
+      <div class="region-name">Kelly's Irish Pub</div>
+      <div class="region-line"></div>
+      <div class="region-badge">R1</div>
+    </div>
+
+    <!-- Matchup 17 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 17</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m17','a',this)"><span class="seed">1</span><span class="bit-name">Hoss</span></button>
+        <button class="option-btn" onclick="pick('m17','b',this)"><span class="seed">16</span><span class="bit-name">Clavicular</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 18 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 18</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m18','a',this)"><span class="seed">8</span><span class="bit-name">Dillon Sending Dave Videos</span></button>
+        <button class="option-btn" onclick="pick('m18','b',this)"><span class="seed">9</span><span class="bit-name">Dave laughing during ad reads</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 19 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 19</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m19','a',this)"><span class="seed">5</span><span class="bit-name">Dave Making Steaks When Wife is Gone</span></button>
+        <button class="option-btn" onclick="pick('m19','b',this)"><span class="seed">12</span><span class="bit-name">The Gift of Gumbo</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 20 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 20</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m20','a',this)"><span class="seed">13</span><span class="bit-name">Square Toe Mafia</span></button>
+        <button class="option-btn" onclick="pick('m20','b',this)"><span class="seed">4</span><span class="bit-name">You Know It Smell Crazy In There</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 21 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 21</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m21','a',this)"><span class="seed">3</span><span class="bit-name">Lost the Farm</span></button>
+        <button class="option-btn" onclick="pick('m21','b',this)"><span class="seed">14</span><span class="bit-name">Dillon's Feet on the Coffee Table</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 22 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 22</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m22','a',this)"><span class="seed">11</span><span class="bit-name">Will Taking a Step Back</span></button>
+        <button class="option-btn" onclick="pick('m22','b',this)"><span class="seed">6</span><span class="bit-name">Randy Taking 6 Months to Move</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 23 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 23</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m23','a',this)"><span class="seed">7</span><span class="bit-name">Producer Week</span></button>
+        <button class="option-btn" onclick="pick('m23','b',this)"><span class="seed">10</span><span class="bit-name">Randy's Bleak Weekends</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 24 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 24</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m24','a',this)"><span class="seed">15</span><span class="bit-name">Randy's Nightly Facetimes</span></button>
+        <button class="option-btn" onclick="pick('m24','b',this)"><span class="seed">2</span><span class="bit-name">Nice Nachos, Pussy</span></button>
+      </div>
+    </div>
+
+    <!-- MATT'S EL RANCHO REGION -->
+    <div class="region-header">
+      <div class="region-name">Matt's El Rancho</div>
+      <div class="region-line"></div>
+      <div class="region-badge">R1</div>
+    </div>
+
+    <!-- Matchup 25 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 25</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m25','a',this)"><span class="seed">2</span><span class="bit-name">Irish Bartender</span></button>
+        <button class="option-btn" onclick="pick('m25','b',this)"><span class="seed">15</span><span class="bit-name">UNC Status</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 26 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 26</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m26','a',this)"><span class="seed">10</span><span class="bit-name">El Glizzadente</span></button>
+        <button class="option-btn" onclick="pick('m26','b',this)"><span class="seed">7</span><span class="bit-name">This is Why Will Left the Show</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 27 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 27</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m27','a',this)"><span class="seed">6</span><span class="bit-name">Randy's Illiteracy</span></button>
+        <button class="option-btn" onclick="pick('m27','b',this)"><span class="seed">11</span><span class="bit-name">Dorn Bullying Backer's Parents</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 28 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 28</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m28','a',this)"><span class="seed">14</span><span class="bit-name">Ol' Gene</span></button>
+        <button class="option-btn" onclick="pick('m28','b',this)"><span class="seed">3</span><span class="bit-name">Pirate Voice</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 29 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 29</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m29','a',this)"><span class="seed">4</span><span class="bit-name">Gwandpappy Dave</span></button>
+        <button class="option-btn" onclick="pick('m29','b',this)"><span class="seed">13</span><span class="bit-name">The Gift of Stew</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 30 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 30</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m30','a',this)"><span class="seed">12</span><span class="bit-name">Washed HQ AC Troubles</span></button>
+        <button class="option-btn" onclick="pick('m30','b',this)"><span class="seed">5</span><span class="bit-name">Guest Grok Introductions</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 31 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 31</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m31','a',this)"><span class="seed">8</span><span class="bit-name">Dillon's WOAT Takes</span></button>
+        <button class="option-btn" onclick="pick('m31','b',this)"><span class="seed">9</span><span class="bit-name">Dillon's athletic feats</span></button>
+      </div>
+    </div>
+
+    <!-- Matchup 32 -->
+    <div class="matchup-card">
+      <div class="matchup-number">MATCHUP 32</div>
+      <div class="matchup-options">
+        <button class="option-btn" onclick="pick('m32','a',this)"><span class="seed">16</span><span class="bit-name">Randy's Ex Roommate</span></button>
+        <button class="option-btn" onclick="pick('m32','b',this)"><span class="seed">1</span><span class="bit-name">I Ain't Drinking Anymore</span></button>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-section" id="submit-section">
+      <h3>Submit Your Bracket</h3>
+      <div class="progress-text" id="progress-text">0 of 32 matchups selected</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-bar" style="width:0%"></div>
+      </div>
+      <button class="btn-submit" id="submit-btn" onclick="submitVote()" disabled>Submit My Picks →</button>
+      <div class="error-msg" id="submit-error"></div>
+    </div>
+
+  </div><!-- end ballot -->
+
+  <!-- SUCCESS STATE -->
+  <div class="success-state" id="success-state">
+    <div class="success-icon">🏆</div>
+    <h2>Vote Submitted!</h2>
+    <p>Your picks are locked in. Tune in Monday at 11am CT when Dillon, Dave & Randy record their votes live — and find out how your bracket stacks up against the hosts.</p>
+    <p style="margin-top:12px;font-style:italic">Spread the word — the more listeners who vote, the more powerful the collective voice!</p>
+  </div>
+
+  <!-- ADMIN TOGGLE -->
+  <div class="admin-toggle">
+    <span class="admin-link" onclick="toggleAdmin()">admin</span>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div class="admin-panel" id="admin-panel">
+    <h2>⚡ RESULTS DASHBOARD</h2>
+    <div class="admin-login" id="admin-login-row">
+      <input type="password" class="admin-input" id="admin-pw" placeholder="Password" onkeydown="if(event.key==='Enter')adminLogin()">
+      <button class="btn-teal" onclick="adminLogin()">Unlock</button>
+    </div>
+    <div class="error-msg" id="admin-error"></div>
+    <div class="results-section" id="results-section">
+      <div class="admin-total" id="admin-total">Loading...</div>
+      <div id="results-container"></div>
+      <button class="btn-refresh" onclick="loadResults()">↻ Refresh Results</button>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc, collection, getDocs, increment, updateDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAknVo-l1bYPHVVhBhpiVqbsp5hvJbHBPA",
+    authDomain: "bitmadness-2026.firebaseapp.com",
+    projectId: "bitmadness-2026",
+    storageBucket: "bitmadness-2026.firebasestorage.app",
+    messagingSenderId: "628293794954",
+    appId: "1:628293794954:web:520dc1144628536ea48173"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const TOTAL_MATCHUPS = 32;
+  let picks = {};
+  let voterEmail = '';
+  let adminUnlocked = false;
+
+  const matchupLabels = {
+    m1:{a:'Alien Allergy Voice',b:'Dan Bringing Protein Powder'},
+    m2:{a:'Lakeside Cunnilingus',b:'Being mad at horny Instagram posts'},
+    m3:{a:'General Contractor Dave',b:'Dillon Being the Only Cowboy'},
+    m4:{a:'Randy Researching Free Sponsor Merch',b:'The Twisted Cork'},
+    m5:{a:'Slonks',b:'Dave Pizza-ing Down the Mountain'},
+    m6:{a:"Dave's Addiction to Smelling Salts",b:'Obama and JFK voice'},
+    m7:{a:'Dillon causing car accidents',b:'Mondo'},
+    m8:{a:"Randy's Side Quests",b:'Out ___ Way'},
+    m9:{a:'Hungwy',b:'Always Welcoming the Stoolies'},
+    m10:{a:"Seaman's Cola",b:'Dave Being Friends with Sweens'},
+    m11:{a:"What's the Damage?",b:'Ren Fair Randy'},
+    m12:{a:'Gladys Getting Filled Up',b:'The Hottest Man on the Planet'},
+    m13:{a:'Dave Taking Chels Out',b:'Less Randy'},
+    m14:{a:"Liv Langdon's Hot Boyfriend",b:"Yeah, I'd Like That One Back"},
+    m15:{a:"It's a Visual Show",b:'Hi Dave'},
+    m16:{a:'Mexico Randy',b:'Mattel Ranchos'},
+    m17:{a:'Hoss',b:'Clavicular'},
+    m18:{a:'Dillon Sending Dave Videos',b:'Dave laughing during ad reads'},
+    m19:{a:'Dave Making Steaks When Wife is Gone',b:'The Gift of Gumbo'},
+    m20:{a:'Square Toe Mafia',b:'You Know It Smell Crazy In There'},
+    m21:{a:'Lost the Farm',b:"Dillon's Feet on the Coffee Table"},
+    m22:{a:'Will Taking a Step Back',b:'Randy Taking 6 Months to Move'},
+    m23:{a:'Producer Week',b:"Randy's Bleak Weekends"},
+    m24:{a:"Randy's Nightly Facetimes",b:'Nice Nachos, Pussy'},
+    m25:{a:'Irish Bartender',b:'UNC Status'},
+    m26:{a:'El Glizzadente',b:'This is Why Will Left the Show'},
+    m27:{a:"Randy's Illiteracy",b:"Dorn Bullying Backer's Parents"},
+    m28:{a:"Ol' Gene",b:'Pirate Voice'},
+    m29:{a:'Gwandpappy Dave',b:'The Gift of Stew'},
+    m30:{a:'Washed HQ AC Troubles',b:'Guest Grok Introductions'},
+    m31:{a:"Dillon's WOAT Takes",b:"Dillon's athletic feats"},
+    m32:{a:"Randy's Ex Roommate",b:"I Ain't Drinking Anymore"}
+  };
+
+  const regionMap = {
+    "Willmon's":['m1','m2','m3','m4','m5','m6','m7','m8'],
+    "The Dick Saloon":['m9','m10','m11','m12','m13','m14','m15','m16'],
+    "Kelly's Irish Pub":['m17','m18','m19','m20','m21','m22','m23','m24'],
+    "Matt's El Rancho":['m25','m26','m27','m28','m29','m30','m31','m32']
+  };
+
+  // Hash email for privacy
+  async function hashEmail(email) {
+    const normalized = email.toLowerCase().trim();
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(normalized));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,32);
+  }
+
+  // Check if email already voted
+  window.checkEmail = async function() {
+    const emailEl = document.getElementById('voter-email');
+    const errEl = document.getElementById('email-error');
+    const btn = document.getElementById('email-btn');
+    const email = emailEl.value.trim();
+
+    if(!email || !email.includes('@')) {
+      errEl.textContent = 'Please enter a valid email address.';
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Checking...';
+
+    try {
+      const hash = await hashEmail(email);
+      const voteRef = doc(db, 'votes', hash);
+      const snap = await getDoc(voteRef);
+
+      if(snap.exists()) {
+        document.getElementById('email-gate').style.display = 'none';
+        document.getElementById('voted-banner').style.display = 'block';
+      } else {
+        voterEmail = email;
+        document.getElementById('email-gate').style.display = 'none';
+        document.getElementById('ballot').style.display = 'block';
+        document.getElementById('submit-section').style.display = 'block';
+        updateProgress();
+      }
+    } catch(e) {
+      errEl.textContent = 'Something went wrong. Please try again.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = "Let's Vote →";
+    }
+  };
+
+  // Pick a winner
+  window.pick = function(matchup, side, btn) {
+    picks[matchup] = side;
+    // Update button states
+    const card = btn.closest('.matchup-card');
+    card.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    updateProgress();
+  };
+
+  function updateProgress() {
+    const count = Object.keys(picks).length;
+    document.getElementById('progress-text').textContent = `${count} of ${TOTAL_MATCHUPS} matchups selected`;
+    document.getElementById('progress-bar').style.width = `${(count/TOTAL_MATCHUPS)*100}%`;
+    document.getElementById('submit-btn').disabled = (count < TOTAL_MATCHUPS);
+  }
+
+  // Submit vote
+  window.submitVote = async function() {
+    const errEl = document.getElementById('submit-error');
+    const btn = document.getElementById('submit-btn');
+    errEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    try {
+      const hash = await hashEmail(voterEmail);
+      const voteRef = doc(db, 'votes', hash);
+      const tallyRef = doc(db, 'tallies', 'round1');
+
+      // Check again for duplicates (race condition protection)
+      const existing = await getDoc(voteRef);
+      if(existing.exists()) {
+        document.getElementById('ballot').style.display = 'none';
+        document.getElementById('submit-section').style.display = 'none';
+        document.getElementById('voted-banner').style.display = 'block';
+        return;
+      }
+
+      // Build tally increments
+      const tallyUpdates = {};
+      Object.entries(picks).forEach(([matchup, side]) => {
+        tallyUpdates[`${matchup}_${side}`] = increment(1);
+        tallyUpdates[`${matchup}_total`] = increment(1);
+      });
+
+      // Save vote + update tallies atomically
+      await runTransaction(db, async (transaction) => {
+        const voteCheck = await transaction.get(voteRef);
+        if(voteCheck.exists()) throw new Error('already_voted');
+        transaction.set(voteRef, { ts: new Date().toISOString(), picks });
+        const tallySnap = await transaction.get(tallyRef);
+        if(!tallySnap.exists()) {
+          const init = { totalVoters: 1 };
+          Object.entries(picks).forEach(([m,s]) => { init[`${m}_${s}`]=1; init[`${m}_total`]=1; });
+          transaction.set(tallyRef, init);
+        } else {
+          const updates = { totalVoters: increment(1) };
+          Object.entries(picks).forEach(([m,s]) => { updates[`${m}_${s}`]=increment(1); updates[`${m}_total`]=increment(1); });
+          transaction.update(tallyRef, updates);
+        }
+      });
+
+      // Show success
+      document.getElementById('ballot').style.display = 'none';
+      document.getElementById('submit-section').style.display = 'none';
+      document.getElementById('success-state').style.display = 'block';
+      window.scrollTo({top:0,behavior:'smooth'});
+
+    } catch(e) {
+      if(e.message === 'already_voted') {
+        document.getElementById('ballot').style.display = 'none';
+        document.getElementById('submit-section').style.display = 'none';
+        document.getElementById('voted-banner').style.display = 'block';
+      } else {
+        errEl.textContent = 'Submission failed. Please try again.';
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Submit My Picks →';
+      }
+    }
+  };
+
+  // ADMIN
+  window.toggleAdmin = function() {
+    const panel = document.getElementById('admin-panel');
+    panel.style.display = panel.style.display === 'none' || !panel.style.display ? 'block' : 'none';
+  };
+
+  window.adminLogin = function() {
+    const pw = document.getElementById('admin-pw').value;
+    const errEl = document.getElementById('admin-error');
+    if(pw !== 'muchdip') {
+      errEl.textContent = 'Incorrect password.';
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+    document.getElementById('admin-login-row').style.display = 'none';
+    document.getElementById('results-section').style.display = 'block';
+    adminUnlocked = true;
+    loadResults();
+  };
+
+  window.loadResults = async function() {
+    if(!adminUnlocked) return;
+    const container = document.getElementById('results-container');
+    container.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.4);font-size:12px;padding:20px">Loading results...</div>';
+
+    try {
+      const tallyRef = doc(db, 'tallies', 'round1');
+      const snap = await getDoc(tallyRef);
+      const data = snap.exists() ? snap.data() : {};
+      const totalVoters = data.totalVoters || 0;
+
+      document.getElementById('admin-total').textContent = `${totalVoters} total voter${totalVoters !== 1 ? 's' : ''}`;
+
+      let html = '';
+      Object.entries(regionMap).forEach(([region, matchups]) => {
+        html += `<div class="results-region"><h3>${region}</h3>`;
+        matchups.forEach(m => {
+          const aVotes = data[`${m}_a`] || 0;
+          const bVotes = data[`${m}_b`] || 0;
+          const total = aVotes + bVotes || 1;
+          const aPct = Math.round((aVotes/total)*100);
+          const bPct = 100 - aPct;
+          const maxBar = 120;
+          html += `<div class="result-row">
+            <div class="result-bits">
+              <div style="margin-bottom:2px">${matchupLabels[m].a}</div>
+              <div style="color:rgba(255,255,255,0.4)">${matchupLabels[m].b}</div>
+            </div>
+            <div class="result-bar-area">
+              <div class="result-bar-row">
+                <span class="result-bar-label">A</span>
+                <div class="result-bar a" style="width:${Math.round(aPct/100*maxBar)}px"></div>
+                <span class="result-count">${aVotes}</span>
+                <span class="result-count" style="color:var(--teal)">${aPct}%</span>
+              </div>
+              <div class="result-bar-row">
+                <span class="result-bar-label">B</span>
+                <div class="result-bar b" style="width:${Math.round(bPct/100*maxBar)}px"></div>
+                <span class="result-count">${bVotes}</span>
+                <span class="result-count" style="color:rgba(255,255,255,0.4)">${bPct}%</span>
+              </div>
+            </div>
+          </div>`;
+        });
+        html += '</div>';
+      });
+
+      container.innerHTML = html || '<div style="text-align:center;color:rgba(255,255,255,0.4);font-size:12px;padding:20px">No votes yet.</div>';
+
+    } catch(e) {
+      container.innerHTML = '<div style="text-align:center;color:#c94040;font-size:12px;padding:20px">Error loading results.</div>';
+    }
+  };
+</script>
+
+</body>
+</html>
