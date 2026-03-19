@@ -1092,8 +1092,8 @@
           const bPctColor = !aWins ? 'var(--teal)' : '#c94040';
           const aNameStyle = aWins ? 'font-weight:600;color:#fff;margin-bottom:2px' : 'color:rgba(255,255,255,0.35);margin-bottom:2px';
           const bNameStyle = !aWins ? 'font-weight:600;color:#fff' : 'color:rgba(255,255,255,0.35)';
-          const aIcon = aWins && total > 0 ? ' ✓' : '';
-          const bIcon = !aWins && total > 0 ? ' ✓' : '';
+          const aIcon = aWins && total > 0 ? ' 🔥' : '';
+          const bIcon = !aWins && total > 0 ? ' 🔥' : '';
           html += `<div class="result-row">
             <div class="result-bits">
               <div style="${aNameStyle}">${matchupLabels[m].a}${aIcon}</div>
