@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BitMadness 2026 — Elite 8</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --teal: #5dada8;
+    --teal-dark: #3d8a85;
+    --teal-light: #e8f4f3;
+    --cream: #f8f5f0;
+    --dark: #1a2332;
+    --dark2: #243044;
+    --text: #1a2332;
+    --muted: #6b7a8d;
+    --border: #d4cec5;
+    --white: #ffffff;
+    --gold: #c8973a;
+    --red: #c94040;
+    --green: #3a9a5c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--dark);
+    padding: 20px 24px;
+    text-align: center;
+  }
+  .header-logo {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--teal);
+    display: block;
+    margin: 0 auto 12px;
+  }
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    letter-spacing: 4px;
+    color: var(--white);
+    line-height: 1;
+  }
+  .header h1 span { color: var(--teal); }
+  .header-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 6px;
+    font-family: 'DM Mono', monospace;
+  }
+  .deadline-banner {
+    background: var(--teal);
+    color: var(--white);
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--dark);
+    padding: 32px 24px 36px;
+    text-align: center;
+    border-bottom: 3px solid var(--teal);
+  }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .hero h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(28px, 6vw, 52px);
+    letter-spacing: 3px;
+    color: var(--white);
+    line-height: 1.1;
+  }
+  .hero h2 em {
+    color: var(--teal);
+    font-style: normal;
+  }
+  .hero p {
+    margin-top: 12px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    max-width: 460px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.7;
+  }
+
+  /* EMAIL GATE */
+  .email-gate {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    text-align: center;
+    max-width: 500px;
+    margin: 32px auto;
+  }
+  .email-gate h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .email-gate p { font-size: 14px; color: var(--muted); margin-bottom: 18px; }
+  .email-input-row { display: flex; gap: 10px; }
+  .email-input {
+    flex: 1;
+    padding: 11px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+  }
+  .email-input:focus { border-color: var(--teal); }
+  .btn-teal {
+    background: var(--teal);
+    color: var(--white);
+    border: none;
+    padding: 11px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .btn-teal:hover { background: var(--teal-dark); }
+  .btn-teal:disabled { opacity: 0.5; cursor: not-allowed; }
+  .error-msg {
+    background: #fff0f0;
+    border: 1px solid #ffc0c0;
+    color: var(--red);
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-top: 10px;
+    display: none;
+    text-align: center;
+  }
+
+  /* MAIN BRACKET */
+  .main { max-width: 1000px; margin: 0 auto; padding: 28px 16px 60px; }
+
+  /* ROUND LABELS */
+  .round-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+
+  /* BRACKET GRID */
+  .bracket-stage {
+    margin-bottom: 32px;
+  }
+
+  /* ELITE 8 — 4 region matchups */
+  .elite8-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  /* FINAL FOUR */
+  .final4-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  /* CHAMPIONSHIP */
+  .champ-grid {
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  /* CONNECTOR LINES */
+  .connector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 32px;
+    position: relative;
+  }
+  .connector-arrow {
+    font-size: 20px;
+    color: var(--teal);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: translateY(0); }
+    50% { opacity: 0.5; transform: translateY(3px); }
+  }
+
+  /* MATCHUP CARD */
+  .matchup-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .matchup-card:hover { box-shadow: 0 2px 16px rgba(0,0,0,0.08); }
+  .matchup-header {
+    background: var(--dark);
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .matchup-region {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: var(--teal);
+  }
+  .matchup-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+  }
+  .matchup-options { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+
+  /* BIT BUTTON */
+  .bit-btn {
+    background: var(--cream);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 14px;
+    cursor: pointer;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.15s;
+    width: 100%;
+  }
+  .bit-btn:hover:not(:disabled) {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+  .bit-btn.selected {
+    border-color: var(--teal);
+    background: var(--teal-light);
+  }
+  .bit-btn.eliminated {
+    border-color: #ffd0d0;
+    background: #fff5f5;
+    opacity: 0.6;
+  }
+  .bit-btn:disabled { cursor: not-allowed; }
+  .bit-seed {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--teal);
+    min-width: 22px;
+    line-height: 1;
+  }
+  .bit-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .bit-name.tbd { color: var(--muted); font-style: italic; }
+  .bit-check {
+    margin-left: auto;
+    font-size: 16px;
+    display: none;
+  }
+  .bit-btn.selected .bit-check { display: block; }
+
+  /* ADVANCING INDICATOR */
+  .advancing-to {
+    text-align: center;
+    padding: 6px 0 10px;
+    font-size: 11px;
+    color: var(--teal);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 1px;
+    display: none;
+  }
+  .advancing-to.show { display: block; }
+
+  /* PLACEHOLDER CARD (empty slot) */
+  .placeholder-card {
+    background: var(--white);
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    opacity: 0.7;
+  }
+  .placeholder-card .matchup-header {
+    background: rgba(26,35,50,0.5);
+  }
+  .placeholder-slot {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .slot-pill {
+    background: var(--cream);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    padding: 11px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 46px;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .slot-pill.filled {
+    background: var(--teal-light);
+    border-color: var(--teal);
+    border-style: solid;
+  }
+  .slot-seed {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--teal);
+    min-width: 22px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .slot-pill.filled .slot-seed { opacity: 1; }
+  .slot-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    font-style: italic;
+    transition: all 0.3s;
+  }
+  .slot-pill.filled .slot-name {
+    color: var(--text);
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  /* CHAMPIONSHIP CARD special styling */
+  .champ-card .matchup-header {
+    background: linear-gradient(135deg, var(--dark) 0%, #2d4060 100%);
+    padding: 12px 16px;
+  }
+  .champ-card .matchup-region {
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+  .champ-card .bit-btn { padding: 14px 16px; }
+  .champ-card .bit-seed { font-size: 24px; }
+  .champ-card .bit-name { font-size: 14px; }
+
+  /* TROPHY CARD */
+  .trophy-slot {
+    max-width: 360px;
+    margin: 0 auto;
+    background: var(--dark);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    border: 2px solid var(--teal);
+  }
+  .trophy-icon { font-size: 40px; margin-bottom: 10px; }
+  .trophy-slot h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .trophy-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--teal);
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
+    font-style: italic;
+    min-height: 24px;
+  }
+
+  /* PROGRESS BAR */
+  .progress-section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .progress-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--teal);
+  }
+  .progress-bar-wrap {
+    background: var(--cream);
+    border-radius: 4px;
+    height: 6px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--teal);
+    border-radius: 4px;
+    transition: width 0.4s;
+  }
+
+  /* SUBMIT */
+  .submit-section {
+    background: var(--dark);
+    border-radius: 12px;
+    padding: 28px 24px;
+    margin-top: 32px;
+    text-align: center;
+  }
+  .submit-section h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .submit-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 20px;
+    font-family: 'DM Mono', monospace;
+  }
+  .btn-submit {
+    background: var(--teal);
+    color: var(--white);
+    border: none;
+    padding: 14px 40px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.5px;
+    transition: all 0.15s;
+  }
+  .btn-submit:hover:not(:disabled) { background: var(--teal-dark); transform: translateY(-1px); }
+  .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  /* SUCCESS */
+  .success-state {
+    background: var(--white);
+    border: 1px solid var(--green);
+    border-radius: 12px;
+    padding: 40px 24px;
+    text-align: center;
+    display: none;
+    margin-top: 32px;
+  }
+  .success-icon { font-size: 48px; margin-bottom: 16px; }
+  .success-state h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 2px;
+    color: var(--green);
+    margin-bottom: 8px;
+  }
+  .success-state p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+  .share-box {
+    margin-top: 20px;
+    background: var(--teal-light);
+    border: 1px solid var(--teal);
+    border-radius: 8px;
+    padding: 14px 18px;
+    display: inline-block;
+  }
+  .share-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--teal);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .share-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .share-url { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text); }
+  .btn-copy {
+    background: var(--teal);
+    color: #fff;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* VOTED BANNER */
+  .voted-banner {
+    background: #fff8e8;
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: none;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .voted-banner p { font-size: 14px; color: var(--gold); font-weight: 600; }
+
+  /* ADMIN */
+  .admin-toggle { text-align: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); }
+  .admin-link { font-size: 11px; color: var(--border); cursor: pointer; font-family: 'DM Mono', monospace; letter-spacing: 1px; }
+  .admin-link:hover { color: var(--muted); }
+  .admin-panel { display: none; background: var(--dark); border-radius: 12px; padding: 28px 24px; margin-top: 16px; }
+  .admin-panel h2 { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; color: var(--teal); margin-bottom: 20px; text-align: center; }
+  .admin-login { display: flex; gap: 10px; max-width: 360px; margin: 0 auto 20px; }
+  .admin-input { flex: 1; padding: 10px 14px; border: 1px solid rgba(255,255,255,0.15); border-radius: 6px; background: rgba(255,255,255,0.07); color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 14px; outline: none; }
+  .admin-input:focus { border-color: var(--teal); }
+  .results-section { display: none; }
+  .results-round { margin-bottom: 28px; }
+  .results-round h3 { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 1px; color: var(--teal); margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
+  .result-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 12px; }
+  .result-row:last-child { border-bottom: none; }
+  .result-bits { flex: 1; color: rgba(255,255,255,0.8); font-size: 11px; }
+  .result-bar-area { width: 160px; }
+  .result-bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+  .result-bar-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.5); width: 18px; text-align: right; }
+  .result-bar { height: 12px; border-radius: 3px; min-width: 2px; }
+  .result-count { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.5); min-width: 20px; }
+  .result-reveal-area { display: flex; align-items: center; gap: 10px; }
+  .btn-reveal { background: var(--teal); color: var(--white); border: none; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap; transition: all 0.15s; flex-shrink: 0; }
+  .btn-reveal:hover { background: var(--teal-dark); }
+  .btn-reveal.revealed { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.3); cursor: default; font-size: 10px; }
+  .admin-total { text-align: center; color: rgba(255,255,255,0.5); font-family: 'DM Mono', monospace; font-size: 11px; margin-bottom: 20px; }
+  .btn-refresh { display: block; margin: 16px auto 0; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); padding: 8px 20px; border-radius: 6px; font-size: 12px; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+  .btn-refresh:hover { border-color: var(--teal); color: var(--teal); }
+
+  /* POINTS LEADERBOARD */
+  .points-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  .points-table th { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.4); padding: 6px 8px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); letter-spacing: 1px; }
+  .points-table td { font-size: 11px; color: rgba(255,255,255,0.8); padding: 7px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .points-table tr:last-child td { border-bottom: none; }
+  .pts-gold { color: var(--gold); font-weight: 700; font-family: 'DM Mono', monospace; }
+
+  @media (max-width: 600px) {
+    .elite8-grid, .final4-grid { grid-template-columns: 1fr; }
+    .result-bar-area { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <img class="header-logo" src="circling-back-logo.jpg" alt="Circling Back" onerror="this.style.display='none'">
+  <h1>BIT<span>MADNESS</span></h1>
+  <div class="header-sub">Circling Back Podcast · 2026 · Elite 8</div>
+</div>
+
+<div class="deadline-banner">
+  ⏰ Voting closes Sunday at midnight CT — champion crowned on Monday's episode
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Elite 8 · Final Rounds</div>
+  <h2>It All Comes Down<br>To <em>This</em></h2>
+  <p>Pick your winner from each region, advance your Final Four, and crown the BitMadness 2026 Champion.</p>
+</div>
+
+<div class="main" id="main-content">
+
+  <!-- EMAIL GATE -->
+  <div class="email-gate" id="email-gate">
+    <h3>Enter Your Email to Vote</h3>
+    <p>One vote per email address. Used only to prevent duplicates.</p>
+    <div class="email-input-row">
+      <input type="email" class="email-input" id="voter-email" placeholder="your@email.com" onkeydown="if(event.key==='Enter')checkEmail()">
+      <button class="btn-teal" onclick="checkEmail()" id="email-btn">Let's Go →</button>
+    </div>
+    <div class="error-msg" id="email-error"></div>
+  </div>
+
+  <!-- VOTED BANNER -->
+  <div class="voted-banner" id="voted-banner">
+    <p>✅ You've already submitted your Elite 8 ballot — tune in Monday to see who wins!</p>
+  </div>
+
+  <!-- BALLOT -->
+  <div id="ballot" style="display:none">
+
+    <!-- PROGRESS -->
+    <div class="progress-section">
+      <div class="progress-header">
+        <span>Bracket Progress</span>
+        <span class="progress-count" id="progress-text">0 of 7 picks made</span>
+      </div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-bar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- ===== ELITE 8 ===== -->
+    <div class="bracket-stage">
+      <div class="round-label">🏟 Elite 8 — Pick One Winner Per Region</div>
+      <div class="elite8-grid">
+
+        <!-- Willmon's -->
+        <div class="matchup-card" id="card-willmons">
+          <div class="matchup-header">
+            <span class="matchup-region">Willmon's</span>
+            <span class="matchup-badge">ELITE 8</span>
+          </div>
+          <div class="matchup-options">
+            <button class="bit-btn" onclick="pickElite8('willmons','a',this)" id="btn-willmons-a">
+              <span class="bit-seed">1</span>
+              <span class="bit-name tbd" id="name-willmons-a">W1 — TBD</span>
+              <span class="bit-check">✓</span>
+            </button>
+            <button class="bit-btn" onclick="pickElite8('willmons','b',this)" id="btn-willmons-b">
+              <span class="bit-seed">2</span>
+              <span class="bit-name tbd" id="name-willmons-b">W2 — TBD</span>
+              <span class="bit-check">✓</span>
+            </button>
+          </div>
+          <div class="advancing-to" id="adv-willmons">✓ advancing to Final Four</div>
+        </div>
+
+        <!-- Dick Saloon -->
+        <div class="matchup-card" id="card-dicksaloon">
+          <div class="matchup-header">
+            <span class="matchup-region">The Dick Saloon</span>
+            <span class="matchup-badge">ELITE 8</span>
+          </div>
+          <div class="matchup-options">
+            <button class="bit-btn" onclick="pickElite8('dicksaloon','a',this)" id="btn-dicksaloon-a">
+              <span class="bit-seed">1</span>
+              <span class="bit-name tbd" id="name-dicksaloon-a">DS1 — TBD</span>
+              <span class="bit-check">✓</span>
+            </button>
+            <button class="bit-btn" onclick="pickElite8('dicksaloon','b',this)" id="btn-dicksaloon-b">
+              <span class="bit-seed">2</span>
+              <span class="bit-name tbd" id="name-dicksaloon-b">DS2 — TBD</span>
+              <span class="bit-check">✓</span>
+            </button>
+          </div>
+          <div class="advancing-to" id="adv-dicksaloon">✓ advancing to Final Four</div>
+        </div>
+
+        <!-- Kelly's Irish Pub -->
+        <div class="matchup-card" id="card-kellys">
+          <div class="matchup-header">
+            <span class="matchup-region">Kelly's Irish Pub</span>
+            <span class="matchup-badge">ELITE 8</span>
+          </div>
+          <div class="matchup-options">
+            <button class="bit-btn" onclick="pickElite8('kellys','a',this)" id="btn-kellys-a">
+              <span class="bit-seed">1</span>
+              <span class="bit-name tbd" id="name-kellys-a">KIP1 — TBD</span>
+              <span class="bit-check">✓</span>
+            </button>
+            <button class="bit-btn" onclick="pickElite8('kellys','b',this)" id="btn-kellys-b">
+              <span class="bit-seed">2</span>
+              <span class="bit-name tbd" id="name-kellys-b">KIP2 — TBD</span>
+              <span class="bit-check">✓</span>
+            </button>
+          </div>
+          <div class="advancing-to" id="adv-kellys">✓ advancing to Final Four</div>
+        </div>
+
+        <!-- Matt's El Rancho -->
+        <div class="matchup-card" id="card-matts">
+          <div class="matchup-header">
+            <span class="matchup-region">Matt's El Rancho</span>
+            <span class="matchup-badge">ELITE 8</span>
+          </div>
+          <div class="matchup-options">
+            <button class="bit-btn" onclick="pickElite8('matts','a',this)" id="btn-matts-a">
+              <span class="bit-seed">1</span>
+              <span class="bit-name tbd" id="name-matts-a">MER1 — TBD</span>
+              <span class="bit-check">✓</span>
+            </button>
+            <button class="bit-btn" onclick="pickElite8('matts','b',this)" id="btn-matts-b">
+              <span class="bit-seed">2</span>
+              <span class="bit-name tbd" id="name-matts-b">MER2 — TBD</span>
+              <span class="bit-check">✓</span>
+            </button>
+          </div>
+          <div class="advancing-to" id="adv-matts">✓ advancing to Final Four</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CONNECTOR -->
+    <div class="connector"><span class="connector-arrow">▼</span></div>
+
+    <!-- ===== FINAL FOUR ===== -->
+    <div class="bracket-stage" id="stage-final4">
+      <div class="round-label">🔥 Final Four — Pick Your Championship Contenders</div>
+      <div class="final4-grid">
+
+        <!-- Left: Willmon's vs Dick Saloon -->
+        <div class="matchup-card" id="card-f4-left">
+          <div class="matchup-header">
+            <span class="matchup-region">Willmon's vs Dick Saloon</span>
+            <span class="matchup-badge">FINAL FOUR</span>
+          </div>
+          <div class="matchup-options" id="f4-left-options">
+            <button class="bit-btn" onclick="pickFinal4('left','a',this)" id="btn-f4-left-a" disabled>
+              <span class="bit-seed" id="f4-left-a-seed">—</span>
+              <span class="bit-name tbd" id="f4-left-a-name">Waiting for Willmon's pick...</span>
+              <span class="bit-check">✓</span>
+            </button>
+            <button class="bit-btn" onclick="pickFinal4('left','b',this)" id="btn-f4-left-b" disabled>
+              <span class="bit-seed" id="f4-left-b-seed">—</span>
+              <span class="bit-name tbd" id="f4-left-b-name">Waiting for Dick Saloon pick...</span>
+              <span class="bit-check">✓</span>
+            </button>
+          </div>
+          <div class="advancing-to" id="adv-f4-left">✓ advancing to Championship</div>
+        </div>
+
+        <!-- Right: Kelly's vs Matt's -->
+        <div class="matchup-card" id="card-f4-right">
+          <div class="matchup-header">
+            <span class="matchup-region">Kelly's vs Matt's El Rancho</span>
+            <span class="matchup-badge">FINAL FOUR</span>
+          </div>
+          <div class="matchup-options">
+            <button class="bit-btn" onclick="pickFinal4('right','a',this)" id="btn-f4-right-a" disabled>
+              <span class="bit-seed" id="f4-right-a-seed">—</span>
+              <span class="bit-name tbd" id="f4-right-a-name">Waiting for Kelly's pick...</span>
+              <span class="bit-check">✓</span>
+            </button>
+            <button class="bit-btn" onclick="pickFinal4('right','b',this)" id="btn-f4-right-b" disabled>
+              <span class="bit-seed" id="f4-right-b-seed">—</span>
+              <span class="bit-name tbd" id="f4-right-b-name">Waiting for Matt's El Rancho pick...</span>
+              <span class="bit-check">✓</span>
+            </button>
+          </div>
+          <div class="advancing-to" id="adv-f4-right">✓ advancing to Championship</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CONNECTOR -->
+    <div class="connector"><span class="connector-arrow">▼</span></div>
+
+    <!-- ===== CHAMPIONSHIP ===== -->
+    <div class="bracket-stage">
+      <div class="round-label">🏆 Championship — Crown Your BitMadness 2026 Champion</div>
+      <div class="champ-grid">
+        <div class="matchup-card champ-card" id="card-champ">
+          <div class="matchup-header">
+            <span class="matchup-region">🏆 Championship</span>
+            <span class="matchup-badge">FINAL</span>
+          </div>
+          <div class="matchup-options">
+            <button class="bit-btn" onclick="pickChamp('a',this)" id="btn-champ-a" disabled>
+              <span class="bit-seed" id="champ-a-seed">—</span>
+              <span class="bit-name tbd" id="champ-a-name">Waiting for Final Four...</span>
+              <span class="bit-check">✓</span>
+            </button>
+            <button class="bit-btn" onclick="pickChamp('b',this)" id="btn-champ-b" disabled>
+              <span class="bit-seed" id="champ-b-seed">—</span>
+              <span class="bit-name tbd" id="champ-b-name">Waiting for Final Four...</span>
+              <span class="bit-check">✓</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TROPHY DISPLAY -->
+    <div style="margin-top:20px">
+      <div class="trophy-slot" id="trophy-slot">
+        <div class="trophy-icon">🏆</div>
+        <h3>Your BitMadness Champion</h3>
+        <div class="trophy-name" id="trophy-name">Select your champion above</div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-section">
+      <h3>Lock In Your Bracket</h3>
+      <div class="submit-sub" id="submit-sub-text">Complete all 7 picks to submit</div>
+      <button class="btn-submit" id="submit-btn" onclick="submitVote()" disabled>Submit My Bracket →</button>
+      <div class="error-msg" id="submit-error"></div>
+    </div>
+
+  </div><!-- end ballot -->
+
+  <!-- SUCCESS -->
+  <div class="success-state" id="success-state">
+    <div class="success-icon">🏆</div>
+    <h2>Bracket Submitted!</h2>
+    <p>Your picks are locked in. Tune in Monday at 11am CT to find out which bit the listeners — and the hosts — crowned as BitMadness 2026 Champion.</p>
+    <p style="margin-top:12px;font-style:italic">Spread the word — the more listeners who vote, the more powerful the collective voice!</p>
+    <div class="share-box">
+      <div class="share-label">Share the vote</div>
+      <div class="share-row">
+        <span class="share-url">https://tinyurl.com/457j47x3</span>
+        <button class="btn-copy" onclick="navigator.clipboard.writeText('https://tinyurl.com/457j47x3').then(()=>{this.textContent='Copied!';setTimeout(()=>this.textContent='Copy Link',2000)})">Copy Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="admin-toggle">
+    <span class="admin-link" onclick="toggleAdmin()">admin</span>
+  </div>
+  <div class="admin-panel" id="admin-panel">
+    <h2>⚡ ELITE 8 RESULTS</h2>
+    <div class="admin-login" id="admin-login-row">
+      <input type="password" class="admin-input" id="admin-pw" placeholder="Password" onkeydown="if(event.key==='Enter')adminLogin()">
+      <button class="btn-teal" onclick="adminLogin()">Unlock</button>
+    </div>
+    <div class="error-msg" id="admin-error"></div>
+    <div class="results-section" id="results-section">
+      <div class="admin-total" id="admin-total">Loading...</div>
+      <div id="results-container"></div>
+      <div style="margin-top:28px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;color:var(--teal);margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:8px;">🏆 POINTS LEADERBOARD</div>
+        <div id="points-container"></div>
+      </div>
+      <button class="btn-refresh" onclick="loadResults()">↻ Refresh Results</button>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, doc, getDoc, setDoc, increment, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAknVo-l1bYPHVVhBhpiVqbsp5hvJbHBPA",
+    authDomain: "bitmadness-2026.firebaseapp.com",
+    projectId: "bitmadness-2026",
+    storageBucket: "bitmadness-2026.firebasestorage.app",
+    messagingSenderId: "628293794954",
+    appId: "1:628293794954:web:520dc1144628536ea48173"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  // POINT VALUES
+  const PTS_FINAL4 = 1;
+  const PTS_CHAMP_GAME = 3;
+  const PTS_CHAMPION = 5;
+
+  // Bit names — UPDATE THESE when real winners are known
+  const bits = {
+    willmons:   { a: { seed: 1, name: 'W1 — TBD' },   b: { seed: 2, name: 'W2 — TBD' } },
+    dicksaloon: { a: { seed: 1, name: 'DS1 — TBD' },  b: { seed: 2, name: 'DS2 — TBD' } },
+    kellys:     { a: { seed: 1, name: 'KIP1 — TBD' }, b: { seed: 2, name: 'KIP2 — TBD' } },
+    matts:      { a: { seed: 1, name: 'MER1 — TBD' }, b: { seed: 2, name: 'MER2 — TBD' } },
+  };
+
+  // State
+  let voterEmail = '';
+  let adminUnlocked = false;
+  let picks = {
+    elite8: {},   // { willmons: 'a', dicksaloon: 'b', kellys: 'a', matts: 'a' }
+    final4: {},   // { left: 'a', right: 'b' }
+    champ: null   // 'a' or 'b'
+  };
+
+  // Populate bit names into DOM on load
+  function initBitNames() {
+    for(const [region, sides] of Object.entries(bits)) {
+      for(const [side, data] of Object.entries(sides)) {
+        const el = document.getElementById(`name-${region}-${side}`);
+        if(el) { el.textContent = data.name; el.classList.remove('tbd'); }
+      }
+    }
+  }
+  initBitNames();
+
+  // Hash email
+  async function hashEmail(email) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(email.toLowerCase().trim()));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,32);
+  }
+
+  // CHECK EMAIL
+  window.checkEmail = async function() {
+    const email = document.getElementById('voter-email').value.trim();
+    const errEl = document.getElementById('email-error');
+    const btn = document.getElementById('email-btn');
+    if(!email || !email.includes('@')) {
+      errEl.textContent = 'Please enter a valid email.';
+      errEl.style.display = 'block'; return;
+    }
+    errEl.style.display = 'none';
+    btn.disabled = true; btn.textContent = 'Checking...';
+    try {
+      const hash = await hashEmail(email);
+      const snap = await getDoc(doc(db, 'votes_elite8', hash));
+      if(snap.exists()) {
+        document.getElementById('email-gate').style.display = 'none';
+        document.getElementById('voted-banner').style.display = 'block';
+      } else {
+        voterEmail = email;
+        document.getElementById('email-gate').style.display = 'none';
+        document.getElementById('ballot').style.display = 'block';
+        updateProgress();
+      }
+    } catch(e) {
+      errEl.textContent = 'Error: ' + (e.code || e.message);
+      errEl.style.display = 'block';
+      btn.disabled = false; btn.textContent = "Let's Go →";
+    }
+  };
+
+  // PICK ELITE 8
+  window.pickElite8 = function(region, side, btn) {
+    picks.elite8[region] = side;
+    // Update buttons
+    ['a','b'].forEach(s => {
+      const b = document.getElementById(`btn-${region}-${s}`);
+      b.classList.remove('selected','eliminated');
+      if(s !== side) b.classList.add('eliminated');
+    });
+    btn.classList.add('selected');
+    btn.classList.remove('eliminated');
+    // Show advancing label
+    document.getElementById(`adv-${region}`).classList.add('show');
+    // Populate Final Four slots
+    updateFinal4();
+    updateProgress();
+  };
+
+  function getWinner(region) {
+    const side = picks.elite8[region];
+    if(!side) return null;
+    return { ...bits[region][side], side };
+  }
+
+  function updateFinal4() {
+    const wW = getWinner('willmons');
+    const wDS = getWinner('dicksaloon');
+    const wK = getWinner('kellys');
+    const wM = getWinner('matts');
+
+    // Left: Willmon's vs Dick Saloon
+    if(wW) {
+      const el = document.getElementById('f4-left-a-name');
+      el.textContent = wW.name; el.classList.remove('tbd');
+      document.getElementById('f4-left-a-seed').textContent = wW.seed;
+    }
+    if(wDS) {
+      const el = document.getElementById('f4-left-b-name');
+      el.textContent = wDS.name; el.classList.remove('tbd');
+      document.getElementById('f4-left-b-seed').textContent = wDS.seed;
+    }
+    if(wW && wDS) {
+      document.getElementById('btn-f4-left-a').disabled = false;
+      document.getElementById('btn-f4-left-b').disabled = false;
+    }
+
+    // Right: Kelly's vs Matt's
+    if(wK) {
+      const el = document.getElementById('f4-right-a-name');
+      el.textContent = wK.name; el.classList.remove('tbd');
+      document.getElementById('f4-right-a-seed').textContent = wK.seed;
+    }
+    if(wM) {
+      const el = document.getElementById('f4-right-b-name');
+      el.textContent = wM.name; el.classList.remove('tbd');
+      document.getElementById('f4-right-b-seed').textContent = wM.seed;
+    }
+    if(wK && wM) {
+      document.getElementById('btn-f4-right-a').disabled = false;
+      document.getElementById('btn-f4-right-b').disabled = false;
+    }
+
+    // Reset championship if Final Four picks become invalid
+    updateChampionship();
+  }
+
+  // PICK FINAL FOUR
+  window.pickFinal4 = function(side_lr, side_ab, btn) {
+    picks.final4[side_lr] = side_ab;
+    // Update buttons
+    ['a','b'].forEach(s => {
+      const b = document.getElementById(`btn-f4-${side_lr}-${s}`);
+      b.classList.remove('selected','eliminated');
+      if(s !== side_ab) b.classList.add('eliminated');
+    });
+    btn.classList.add('selected');
+    btn.classList.remove('eliminated');
+    document.getElementById(`adv-f4-${side_lr}`).classList.add('show');
+    updateChampionship();
+    updateProgress();
+  };
+
+  function updateChampionship() {
+    const leftSide = picks.final4['left'];
+    const rightSide = picks.final4['right'];
+
+    const wW = getWinner('willmons');
+    const wDS = getWinner('dicksaloon');
+    const wK = getWinner('kellys');
+    const wM = getWinner('matts');
+
+    // Left finalist
+    let leftWinner = null;
+    if(leftSide === 'a' && wW) leftWinner = wW;
+    else if(leftSide === 'b' && wDS) leftWinner = wDS;
+
+    // Right finalist
+    let rightWinner = null;
+    if(rightSide === 'a' && wK) rightWinner = wK;
+    else if(rightSide === 'b' && wM) rightWinner = wM;
+
+    if(leftWinner) {
+      const el = document.getElementById('champ-a-name');
+      el.textContent = leftWinner.name; el.classList.remove('tbd');
+      document.getElementById('champ-a-seed').textContent = leftWinner.seed;
+    }
+    if(rightWinner) {
+      const el = document.getElementById('champ-b-name');
+      el.textContent = rightWinner.name; el.classList.remove('tbd');
+      document.getElementById('champ-b-seed').textContent = rightWinner.seed;
+    }
+    if(leftWinner && rightWinner) {
+      document.getElementById('btn-champ-a').disabled = false;
+      document.getElementById('btn-champ-b').disabled = false;
+    }
+  }
+
+  // PICK CHAMPION
+  window.pickChamp = function(side, btn) {
+    picks.champ = side;
+    ['a','b'].forEach(s => {
+      const b = document.getElementById(`btn-champ-${s}`);
+      b.classList.remove('selected','eliminated');
+      if(s !== side) b.classList.add('eliminated');
+    });
+    btn.classList.add('selected');
+    btn.classList.remove('eliminated');
+    // Update trophy display
+    const champName = document.getElementById(`champ-${side}-name`).textContent;
+    document.getElementById('trophy-name').textContent = champName;
+    updateProgress();
+  };
+
+  // PROGRESS
+  function updateProgress() {
+    const e8 = Object.keys(picks.elite8).length;
+    const f4 = Object.keys(picks.final4).length;
+    const c = picks.champ ? 1 : 0;
+    const total = e8 + f4 + c;
+    const max = 7;
+    document.getElementById('progress-text').textContent = `${total} of ${max} picks made`;
+    document.getElementById('progress-bar').style.width = `${(total/max)*100}%`;
+    const submitBtn = document.getElementById('submit-btn');
+    submitBtn.disabled = total < max;
+    if(total === max) {
+      document.getElementById('submit-sub-text').textContent = 'All picks made — ready to submit!';
+    }
+  }
+
+  // SUBMIT
+  window.submitVote = async function() {
+    const errEl = document.getElementById('submit-error');
+    const btn = document.getElementById('submit-btn');
+    errEl.style.display = 'none';
+    btn.disabled = true; btn.textContent = 'Submitting...';
+
+    try {
+      const hash = await hashEmail(voterEmail);
+      const voteRef = doc(db, 'votes_elite8', hash);
+      const tallyRef = doc(db, 'tallies', 'eliteeight');
+
+      const existing = await getDoc(voteRef);
+      if(existing.exists()) {
+        document.getElementById('ballot').style.display = 'none';
+        document.getElementById('voted-banner').style.display = 'block';
+        return;
+      }
+
+      // Build point tallies
+      // Elite 8 winners get 1 pt each (Final Four = 1 pt)
+      // Final Four winners get 3 pts each (Championship game = 3 pts)
+      // Champion gets 5 pts
+      const updates = { totalVoters: increment(1) };
+
+      const regionMap = { willmons: 'w', dicksaloon: 'ds', kellys: 'k', matts: 'm' };
+
+      // Elite 8 picks → 1pt each for making Final Four
+      for(const [region, side] of Object.entries(picks.elite8)) {
+        const key = `e8_${regionMap[region]}_${side}`;
+        updates[key] = increment(1);
+        updates[`e8_${regionMap[region]}_total`] = increment(1);
+        updates[`pts_${getBitKey(region, side)}`] = increment(PTS_FINAL4);
+      }
+
+      // Final Four picks → 3pts each for making Championship
+      const leftWinnerRegion = picks.final4['left'] === 'a' ? 'willmons' : 'dicksaloon';
+      const rightWinnerRegion = picks.final4['right'] === 'a' ? 'kellys' : 'matts';
+      const leftWinnerSide = picks.elite8[leftWinnerRegion];
+      const rightWinnerSide = picks.elite8[rightWinnerRegion];
+      updates[`f4_left_${picks.final4['left']}`] = increment(1);
+      updates[`f4_right_${picks.final4['right']}`] = increment(1);
+      updates[`pts_${getBitKey(leftWinnerRegion, leftWinnerSide)}`] = increment(PTS_CHAMP_GAME);
+      updates[`pts_${getBitKey(rightWinnerRegion, rightWinnerSide)}`] = increment(PTS_CHAMP_GAME);
+
+      // Championship pick → 5pts
+      const champRegion = picks.champ === 'a' ? leftWinnerRegion : rightWinnerRegion;
+      const champSide = picks.champ === 'a' ? leftWinnerSide : rightWinnerSide;
+      updates[`champ_${picks.champ}`] = increment(1);
+      updates[`pts_${getBitKey(champRegion, champSide)}`] = increment(PTS_CHAMPION);
+
+      // Save
+      await setDoc(voteRef, { ts: new Date().toISOString(), picks });
+      const snap = await getDoc(tallyRef);
+      if(!snap.exists()) {
+        await setDoc(tallyRef, { ...updates });
+      } else {
+        await updateDoc(tallyRef, updates);
+      }
+
+      document.getElementById('ballot').style.display = 'none';
+      document.getElementById('submit-section').style.display = 'none';
+      document.getElementById('success-state').style.display = 'block';
+      window.scrollTo({top:0,behavior:'smooth'});
+
+    } catch(e) {
+      console.error(e);
+      errEl.textContent = 'Error: ' + (e.code || e.message);
+      errEl.style.display = 'block';
+      btn.disabled = false; btn.textContent = 'Submit My Bracket →';
+    }
+  };
+
+  function getBitKey(region, side) {
+    const r = { willmons:'w', dicksaloon:'ds', kellys:'k', matts:'m' };
+    return `${r[region]}_${side}`;
+  }
+
+  // ADMIN
+  window.toggleAdmin = function() {
+    const p = document.getElementById('admin-panel');
+    p.style.display = p.style.display === 'block' ? 'none' : 'block';
+  };
+
+  window.adminLogin = function() {
+    const pw = document.getElementById('admin-pw').value;
+    const errEl = document.getElementById('admin-error');
+    if(pw !== 'muchdip') { errEl.textContent = 'Incorrect password.'; errEl.style.display = 'block'; return; }
+    errEl.style.display = 'none';
+    document.getElementById('admin-login-row').style.display = 'none';
+    document.getElementById('results-section').style.display = 'block';
+    adminUnlocked = true;
+    loadResults();
+  };
+
+  window.revealResult = function(id) {
+    const r = document.getElementById('result-' + id);
+    const b = document.getElementById('btn-' + id);
+    if(r && b) { r.style.display = 'block'; b.textContent = '✓ Revealed'; b.classList.add('revealed'); b.disabled = true; }
+  };
+
+  window.loadResults = async function() {
+    if(!adminUnlocked) return;
+    const container = document.getElementById('results-container');
+    const pointsContainer = document.getElementById('points-container');
+    container.innerHTML = '<div style="text-align:center;color:rgba(255,255,255,0.4);font-size:12px;padding:20px">Loading...</div>';
+
+    try {
+      const snap = await getDoc(doc(db, 'tallies', 'eliteeight'));
+      const d = snap.exists() ? snap.data() : {};
+      const totalVoters = d.totalVoters || 0;
+      document.getElementById('admin-total').textContent = `${totalVoters} total voter${totalVoters!==1?'s':''}`;
+
+      const maxBar = 120;
+      let html = '';
+
+      // Elite 8 results
+      html += '<div class="results-round"><h3>Elite 8</h3>';
+      const e8matchups = [
+        { id:'e8-w', label:"Willmon's", key:'w', la: bits.willmons.a.name, lb: bits.willmons.b.name },
+        { id:'e8-ds', label:'Dick Saloon', key:'ds', la: bits.dicksaloon.a.name, lb: bits.dicksaloon.b.name },
+        { id:'e8-k', label:"Kelly's Irish Pub", key:'k', la: bits.kellys.a.name, lb: bits.kellys.b.name },
+        { id:'e8-m', label:"Matt's El Rancho", key:'m', la: bits.matts.a.name, lb: bits.matts.b.name },
+      ];
+      e8matchups.forEach(m => {
+        const av = d[`e8_${m.key}_a`]||0, bv = d[`e8_${m.key}_b`]||0;
+        const tot = av+bv||1;
+        const ap = Math.round(av/tot*100), bp = 100-ap;
+        const aW = av>=bv;
+        html += `<div class="result-row" id="row-${m.id}">
+          <div class="result-bits"><div style="margin-bottom:2px;color:rgba(255,255,255,0.8)">${m.la}</div><div style="color:rgba(255,255,255,0.4)">${m.lb}</div></div>
+          <div class="result-reveal-area">
+            <div id="result-${m.id}" style="display:none">
+              <div class="result-bar-area">
+                <div class="result-bar-row"><span class="result-bar-label">A</span><div class="result-bar" style="width:${Math.round(ap/100*maxBar)}px;background:${aW?'#5dada8':'#c94040'}"></div><span class="result-count">${av}</span><span class="result-count" style="color:${aW?'var(--teal)':'#c94040'}">${ap}%</span></div>
+                <div class="result-bar-row"><span class="result-bar-label">B</span><div class="result-bar" style="width:${Math.round(bp/100*maxBar)}px;background:${!aW?'#5dada8':'#c94040'}"></div><span class="result-count">${bv}</span><span class="result-count" style="color:${!aW?'var(--teal)':'#c94040'}">${bp}%</span></div>
+              </div>
+            </div>
+            <button class="btn-reveal" id="btn-${m.id}" onclick="revealResult('${m.id}')">🎬 Reveal</button>
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+
+      // Final Four results
+      html += '<div class="results-round"><h3>Final Four</h3>';
+      [
+        { id:'f4-left', label:"Left (Willmon's / Dick Saloon)", la:'Left A wins', lb:'Left B wins', ka:'f4_left_a', kb:'f4_left_b' },
+        { id:'f4-right', label:"Right (Kelly's / Matt's El Rancho)", la:'Right A wins', lb:'Right B wins', ka:'f4_right_a', kb:'f4_right_b' },
+      ].forEach(m => {
+        const av=d[m.ka]||0, bv=d[m.kb]||0, tot=av+bv||1;
+        const ap=Math.round(av/tot*100), bp=100-ap, aW=av>=bv;
+        html += `<div class="result-row"><div class="result-bits"><div style="margin-bottom:2px;color:rgba(255,255,255,0.8)">${m.label}</div></div>
+          <div class="result-reveal-area">
+            <div id="result-${m.id}" style="display:none">
+              <div class="result-bar-area">
+                <div class="result-bar-row"><span class="result-bar-label">A</span><div class="result-bar" style="width:${Math.round(ap/100*maxBar)}px;background:${aW?'#5dada8':'#c94040'}"></div><span class="result-count">${av}</span><span class="result-count" style="color:${aW?'var(--teal)':'#c94040'}">${ap}%</span></div>
+                <div class="result-bar-row"><span class="result-bar-label">B</span><div class="result-bar" style="width:${Math.round(bp/100*maxBar)}px;background:${!aW?'#5dada8':'#c94040'}"></div><span class="result-count">${bv}</span><span class="result-count" style="color:${!aW?'var(--teal)':'#c94040'}">${bp}%</span></div>
+              </div>
+            </div>
+            <button class="btn-reveal" id="btn-${m.id}" onclick="revealResult('${m.id}')">🎬 Reveal</button>
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+
+      // Championship
+      html += '<div class="results-round"><h3>Championship</h3>';
+      const ca=d['champ_a']||0, cb=d['champ_b']||0, ct=ca+cb||1;
+      const cap=Math.round(ca/ct*100), cbp=100-cap, caW=ca>=cb;
+      html += `<div class="result-row"><div class="result-bits"><div style="color:rgba(255,255,255,0.8)">Championship Vote</div></div>
+        <div class="result-reveal-area">
+          <div id="result-champ" style="display:none">
+            <div class="result-bar-area">
+              <div class="result-bar-row"><span class="result-bar-label">A</span><div class="result-bar" style="width:${Math.round(cap/100*maxBar)}px;background:${caW?'#5dada8':'#c94040'}"></div><span class="result-count">${ca}</span><span class="result-count" style="color:${caW?'var(--teal)':'#c94040'}">${cap}%</span></div>
+              <div class="result-bar-row"><span class="result-bar-label">B</span><div class="result-bar" style="width:${Math.round(cbp/100*maxBar)}px;background:${!caW?'#5dada8':'#c94040'}"></div><span class="result-count">${cb}</span><span class="result-count" style="color:${!caW?'var(--teal)':'#c94040'}">${cbp}%</span></div>
+            </div>
+          </div>
+          <button class="btn-reveal" id="btn-champ" onclick="revealResult('champ')">🎬 Reveal</button>
+        </div>
+      </div>`;
+      html += '</div>';
+
+      container.innerHTML = html;
+
+      // Points leaderboard
+      const ptKeys = ['w_a','w_b','ds_a','ds_b','k_a','k_b','m_a','m_b'];
+      const regionNames = { w:'Willmon\'s', ds:'Dick Saloon', k:"Kelly's", m:"Matt's El Rancho" };
+      const ptRows = ptKeys.map(k => {
+        const [r,s] = k.split('_');
+        const bitData = { w: bits.willmons, ds: bits.dicksaloon, k: bits.kellys, m: bits.matts }[r];
+        const name = bitData ? bitData[s].name : k;
+        return { key: k, name, pts: d[`pts_${k}`]||0 };
+      }).sort((a,b) => b.pts - a.pts);
+
+      let ptHtml = '<table class="points-table"><thead><tr><th>#</th><th>BIT</th><th>TOTAL PTS</th></tr></thead><tbody>';
+      ptRows.forEach((r,i) => {
+        ptHtml += `<tr><td style="color:rgba(255,255,255,0.4)">${i+1}</td><td>${r.name}</td><td class="pts-gold">${r.pts}</td></tr>`;
+      });
+      ptHtml += '</tbody></table>';
+      pointsContainer.innerHTML = ptHtml;
+
+    } catch(e) {
+      container.innerHTML = `<div style="text-align:center;color:#c94040;font-size:12px;padding:20px">Error: ${e.message}</div>`;
+    }
+  };
+</script>
+
+</body>
+</html>
